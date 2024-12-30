@@ -34,4 +34,5 @@ typedef struct Leaf {
 
 typedef struct Tree {
     Node n;
+    Leaf l;
 } Tree;
