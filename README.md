@@ -1,4 +1,4 @@
-# ** DBServer Tree Structure **
+# **DBServer Tree Structure**
 
  **Overview**
 
