@@ -1,51 +1,8 @@
-#include "tree.h"
-Tree root = {
-    .n = {
-    .tag = (TagRoot|TagNode),
-    .north = (Node*)&root,
-    .west = 0,
-    .east = 0,
-    .path = "/"
-    }
-};
-void zero(int8 *str,int16 size){
-int8* p;
-int16 n;
-for(n=0,p=str;n<size;p++,n++){
-    *p=0;
-}
-return;
-};
-Leaf* find_leaf_linear(int8* path,int8* key){
-Node* n = find_node_linear(path);
-Leaf *l,*ret;
-if(!n){
-    return (Leaf*)0;
-}
-for(ret = (Leaf*)0,l = n->east;l;l = l->east){
-    if(!strcmp((char*)l->key, (char*)key)){
-        ret = l;
-        break;
-    }
-}
-return ret;
-}
-int8* lookup_linear(int8* path,int8* key){
-    Leaf* p = find_leaf_linear(path,key);
-    return (p)?p->value:(int8*)"Not Found";
-}
-Node* find_node_linear(int8* path){
-    Node* p,*ret;
-    for(p = (Node*)&root,ret=(Node*)0;p;p=p->west){
-        if(!strncmp((char*)p->path,(char*)path,255)){
-            ret=p;
-            break;
-        }
-    }
-    return ret;
-}
-
-
+#include "./headers/tree.h"
+#include "./Creating/leaf.c"
+#include "./Creating/node.c"
+#include "./helpers/helper.c"
+#include "./Search_Algorithm/leaf.c"
 
 void print_tree(int fd,Tree* _root){
     int8 indentation=0;
@@ -77,74 +34,6 @@ void print_tree(int fd,Tree* _root){
     return;
 
 }
-
-
-int8 *indent(int8 n){
-    int8* p;
-    static int8 buf[256];
-    if(n<1){
-        return (int8*)"";
-    }
-    assert(n<120);
-    zero(buf,256);
-    int8 i =0;
-    for(i=0,p=buf;i<n;i++,p+=2){
-        strncpy((char*)p,"  ",2);
-    }
-    return buf;
-}
-
-
-Node* create_node(Node* parent,int8* path){
-Node* n;
-int16 size = sizeof(Node);
-assert(parent);
-n = (Node*)malloc(size);
-zero((int8*)n,size);
-parent->west = n;
-n->tag = TagNode;
-n->north = parent;
-strncpy((char*)n->path,(char*)path,255);
-return n;
-}
-Leaf* find_last_linear(Node* parent){
-    Leaf* l;
-    assert(parent);
-    errno = NoError;
-    if(!parent->east){
-        return (Leaf*)0;
-    }
-    for(l = (Leaf *)parent->east;l->east;l = l->east);
-    assert(l);
-    return l;
-
-}
-Leaf* create_leaf(Node* parent,int16 count,int8* value,int8* key){
-    Leaf* l;
-    Leaf* new;
-    int16 size;
-    assert(parent);
-    l = find_last_linear(parent);
-    size = sizeof(struct s_leaf);
-    new = (Leaf*)malloc(size);
-    if(!l){
-        parent->east=new;
-    }
-    else{
-        l->east = new;
-    }
-    zero((int8*)new,size);
-    new->tag = TagLeaf;
-    new->west = (!l)?(Tree*)parent:(Tree*)l;
-    key[strcspn((char*)key, "\n")] = 0;
-    strncpy((char*)new->key,(char*)key,127);
-    new->value = (int8*)malloc(count);
-    zero(new->value,count);
-    strncpy((char*)new->value,(char*)value,count);
-    new->size = count;
-return new;
-}
-
 Tree* example_tree(){
     int8 c;
     Node*n,*p;
@@ -160,23 +49,6 @@ Tree* example_tree(){
     }
     return &root;
 }
-int8* duplicate(int8* str){
-    int16 x,n;
-    static int8 buf[256];
-    zero(buf,255);
-    strncpy((char*)buf,(char*)str,255);
-    n = (int16)strlen((char*)buf);
-    x = n*2;
-    if(x>254){
-        return buf;
-    }
-    else{
-        char* val = strdup((char*)buf);
-        strncpy((char*)buf+n,(char*)val,255-n);
-    }
-    return buf;
-}
-
 int32 example_leaves(){
     FILE* fd;
     int8 buf[256];
@@ -223,7 +95,7 @@ int8* example_path(int8 path){
     }
     return buf;
 }
-int main_tree(){
+int main(){
     Tree* example;
     example = example_tree();
     printf("populating tree\n");

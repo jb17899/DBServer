@@ -1,17 +1,18 @@
-#include "tree.c"
-#include "cache22.h"
+#include "./headers/tree.h"
+#include "./headers/cache22.h"
+#include "hash.c"
 bool nvalue;
 bool cvalue;
 
 int32 handle_hello(Client*,int8*,int8*);
-
+int32 handle_cmd(Client*,int8*,int8*,int8*);
 CmdHandler handler[] = {
     {(int8*) "hello",handle_hello},
     {(int8*) "hello",handle_hello}
 };
-int32 handle_hello(Client* cli,int8* args,int8* folder){
-    dprintf(cli->s,"hello back %s",args);
-    return 0;
+int32 handle_cmd(Client* cli,int8* args,int8* folder,int8* cmd){
+    if(strcpy())
+    
 }
 Callback getcmd(int8* cmd){
     int16 n,arrlen;
@@ -90,6 +91,7 @@ void childloop(Client* client){
     dprintf(client->s,"cmd:\t%s\n",cmd);
     dprintf(client->s,"folder:\t%s\n",folder);
     dprintf(client->s,"arguments:\t%s",args);
+    // handle_cmd(client,args,folder,cmd);
     return;
 }
 void mainloop(int s){
@@ -153,7 +155,11 @@ int initserver(int16 port){
 
 
 int main(int argc,char* argv[]){
-    char* sport;
+char user[256];
+int a = getlogin_r(&user,255);
+printf("%s\n",user);
+
+char* sport;
     int16 port;
     if(argc<2){
         sport = PORT;

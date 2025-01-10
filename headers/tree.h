@@ -52,6 +52,15 @@ typedef struct u_tree{
     Node n;
     Leaf l;
  } Tree;
+ Tree root = {
+    .n = {
+    .tag = (TagRoot|TagNode),
+    .north = (Node*)&root,
+    .west = 0,
+    .east = 0,
+    .path = "/"
+    }
+};
 int8* indent(int8);
 void print_tree(int,Tree *);
 Leaf* find_last_linear(Node*);
