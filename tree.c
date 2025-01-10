@@ -55,7 +55,6 @@ int32 example_leaves(){
     int32 x,y;
     Leaf* l ;
     Node* n;
-    int8 c;
     int8* path,*val;
     fd = fopen(EXAMPLEFILE,"r");
     assert(fd);

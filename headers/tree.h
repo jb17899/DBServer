@@ -9,6 +9,7 @@
 #include<fcntl.h>
 #pragma GCC diagnostic ignored "-Wunused-result"
 #pragma GCC diagnostic ignored "-Wstringop-truncation"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic push
 
 #define TagRoot 1
@@ -61,6 +62,7 @@ typedef struct u_tree{
     .path = "/"
     }
 };
+void zero(int8*,int16);
 int8* indent(int8);
 void print_tree(int,Tree *);
 Leaf* find_last_linear(Node*);
